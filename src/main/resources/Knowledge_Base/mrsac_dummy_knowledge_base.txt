@@ -1,0 +1,204 @@
+MRSAC DUMMY KNOWLEDGE BASE
+=============================
+
+PURPOSE
+This is synthetic development data for testing the AI-assisted letter validation
+system. It is NOT confidential data and does NOT represent official MRSAC policy.
+
+CONTENT VALIDATION RULES
+------------------------
+
+RULE 1 - REQUEST TYPE
+The letter must clearly state what is being requested.
+
+Valid examples:
+- Satellite imagery
+- GIS vector data
+- Land-use / land-cover data
+- Technical mapping support
+- Geospatial analysis support
+
+If the requested data or service cannot be identified, the request is invalid.
+
+RULE 2 - PURPOSE
+The letter must clearly state why the requested data or service is needed.
+
+Valid examples:
+- Land-use and land-cover analysis
+- Road development planning
+- Agricultural mapping
+- Research project
+- Infrastructure planning
+
+If no purpose is stated, the request is invalid.
+
+RULE 3 - GEOGRAPHICAL AREA
+The letter must identify the geographical area when the request is
+location-specific.
+
+Examples:
+- Wardha district
+- Nagpur city
+- Bhusawal taluka
+- A specified village
+- A specified project area
+
+If a location-specific request has no geographical area, it is invalid.
+
+RULE 4 - TIME PERIOD
+A time period is REQUIRED for time-dependent data.
+
+Time-dependent examples:
+- Satellite imagery
+- Historical land-use data
+- Rainfall data
+- Temporal change analysis
+
+Valid time descriptions include:
+- January 2025 to December 2025
+- Imagery captured during 2024
+- Latest available imagery
+
+If time-dependent data is requested and no time period is stated, the request
+is invalid.
+
+RULE 5 - DATA SPECIFICATION
+The letter must contain enough information to identify the requested data.
+
+For satellite imagery, applicable details may include:
+- Satellite or sensor
+- Spatial resolution
+- Date or time period
+- Geographic area
+- Imagery/product type
+
+For GIS/vector data, applicable details may include:
+- Dataset/layer
+- Geographic area
+- Version or time period, when applicable
+
+Not every possible technical detail is mandatory. The request only needs enough
+information to identify what is required.
+
+RULE 6 - OUTPUT FORMAT
+A specific output format should be stated when the requester requires one.
+
+Examples:
+- GeoTIFF
+- Shapefile
+- GeoJSON
+- PDF
+- DWG
+
+If no specific format is required, missing format information does NOT make the
+letter invalid.
+
+RULE 7 - PROJECT OR ACTIVITY
+If the request relates to a project, research activity, survey, planning
+activity, or technical assignment, the letter must identify that activity
+sufficiently to explain the purpose.
+
+RULE 8 - SUPPORTING DOCUMENTS
+Supporting documents are REQUIRED only when the applicable request requires a
+specific document, authorization, map, specification, or reference.
+
+If no supporting document is required, its absence does NOT make the letter
+invalid.
+
+RULE 9 - REQUESTED ACTION
+The letter must clearly state what action is expected from the organization.
+
+Examples:
+- Provide satellite imagery
+- Provide GIS layers
+- Confirm dataset availability
+- Provide technical guidance
+- Prepare a map
+- Provide data-access information
+
+A vague request such as "Please provide necessary help" is insufficient.
+
+RULE 10 - CONSISTENCY
+The important details must not contradict each other.
+
+Check consistency between:
+- Subject
+- Requested data/service
+- Geographic area
+- Time period
+- Purpose
+- Project/activity
+
+Example of inconsistency:
+The subject requests Wardha satellite imagery but the body requests Nagpur GIS
+layers.
+
+CONTENT VALIDATION DECISION
+---------------------------
+A request is CONTENT-VALID when:
+1. The requested data/service is identifiable.
+2. The purpose is identifiable.
+3. The geographical area is identifiable when applicable.
+4. The time period is present when the request is time-dependent.
+5. The data specification is sufficient.
+6. Required project/activity information is present when applicable.
+7. The requested action is clear.
+8. No important contradiction exists.
+
+A request is CONTENT-INVALID when one or more applicable required conditions
+are missing, unclear, or contradictory.
+
+IMPORTANT LLM INSTRUCTIONS
+--------------------------
+1. Do NOT invent missing information.
+2. Do NOT assume information that is not present in the letter.
+3. Do NOT mark optional information as missing.
+4. Apply only rules relevant to the request type.
+5. If a rule is not applicable, do not report it as a failure.
+6. Explain which rule failed and what information is missing.
+7. Return structured JSON, not a vague answer.
+
+EXPECTED OUTPUT
+---------------
+{
+  "contentValid": true,
+  "requestType": "SATELLITE_DATA",
+  "missingInformation": [],
+  "issues": [],
+  "extractedRequirements": [
+    "Satellite imagery",
+    "Wardha district",
+    "Land-use and land-cover analysis",
+    "January 2025 to December 2025"
+  ]
+}
+
+INVALID EXAMPLE
+---------------
+{
+  "contentValid": false,
+  "requestType": "SATELLITE_DATA",
+  "missingInformation": [
+    "Required time period"
+  ],
+  "issues": [
+    "The request is for time-dependent satellite imagery but no time period is specified."
+  ],
+  "extractedRequirements": [
+    "Satellite imagery",
+    "Wardha district",
+    "Land-use and land-cover analysis"
+  ]
+}
+
+SYNTHETIC REQUEST TYPES
+-----------------------
+1. SATELLITE_DATA
+2. GIS_VECTOR_DATA
+3. LAND_USE_LAND_COVER_DATA
+4. TECHNICAL_MAPPING_SUPPORT
+5. GEOSPATIAL_ANALYSIS_SUPPORT
+
+These categories are synthetic and are used only for development and testing.
+
+END OF KNOWLEDGE BASE
