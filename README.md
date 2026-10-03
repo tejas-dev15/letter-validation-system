@@ -1,297 +1,188 @@
-# AI-Assisted Letter Validation & Automated Response Generation System
+# 🤖 AI-Assisted Letter Validation & Automated Response Generation System
 
-An AI-powered **document validation and automated response generation system** built using Spring Boot. The system analyzes official letters, extracts structured information, validates their format and content, and generates appropriate client-facing responses.
-
-The project combines **LLMs, OCR, PDF processing, PostgreSQL, and knowledge-base-driven validation** to automate the processing of geospatial and remote-sensing related requests.
+> An AI-powered backend system for validating client request letters, identifying missing or incomplete information, and automatically generating appropriate responses.
 
 ---
 
-## Architecture Overview
+## 📌 Overview
 
-The system follows a sequential AI-assisted document validation pipeline.
+The **AI-Assisted Letter Validation & Automated Response Generation System** is a Spring Boot–based backend application developed to automate the validation of incoming client letters requesting geospatial and remote-sensing related data or services.
 
-### Document Processing Layer
+The system combines:
 
-Responsible for receiving and processing uploaded documents.
+- ☕ **Java & Spring Boot**
+- 🤖 **Large Language Models (LLMs)**
+- 👁️ **OCR**
+- 🗄️ **PostgreSQL**
+- 📚 **Knowledge Base–Driven Validation**
+- 🧠 **Ollama + Qwen 2.5**
+- 📄 **PDF and image document processing**
 
-- PDF / PNG / JPEG document upload
-- File validation
-- Document metadata storage
-- PDF text extraction
-- OCR using Tesseract
-- Extracted text persistence
-
-### AI Validation Layer
-
-Responsible for understanding and validating the letter.
-
-- Structured information extraction using an LLM
-- Format validation
-- Content validation
-- Knowledge-base-driven validation
-- Missing information detection
-
-### Response Generation Layer
-
-Responsible for converting validation results into a client-facing response.
-
-- Validation result analysis
-- Missing information explanation
-- Correction guidance
-- Automated response generation
+Instead of manually checking every incoming letter, the system extracts relevant information, validates the letter's format and content, and generates a clear response explaining whether corrections are required.
 
 ---
 
-## Technology Stack
+## 🎯 Project Objective
 
-### Backend
+The primary objective is to build an intelligent system capable of answering:
 
-- **Language:** Java 21
-- **Framework:** Spring Boot 4.1.0
-- **Web:** Spring MVC
-- **ORM:** Spring Data JPA / Hibernate
-- **Build Tool:** Maven
+> **"Does this request letter contain all the information required to process the requested service?"**
 
-### AI / NLP
+The system performs this through multiple stages:
 
-- **AI Framework:** Spring AI 2.0.0
-- **LLM Runtime:** Ollama
-- **LLM Model:** Qwen 2.5 3B
-
-### OCR & Document Processing
-
-- **OCR:** Tesseract OCR
-- **Java OCR Integration:** Tess4J
-- **PDF Processing:** Apache PDFBox
-
-### Database
-
-- **Database:** PostgreSQL
-
-### Development & Testing
-
-- IntelliJ IDEA
-- Git / GitHub
-- Postman
+1. 📤 Upload the document
+2. 🔍 Extract text using OCR
+3. 🧾 Extract structured information from the letter
+4. 📋 Validate the letter's format
+5. 📚 Validate the requested content against the knowledge base
+6. ✍️ Generate an appropriate response
 
 ---
 
-## Key Features
-
-### Document Upload
-
-- Upload PDF, PNG, and JPEG documents
-- File type validation
-- File size validation
-- Document metadata storage
-- Document processing status tracking
-
-### OCR & Text Extraction
-
-- Extract text from PDF documents
-- OCR support for image-based documents
-- Tesseract integration through Tess4J
-- Apache PDFBox integration for PDF processing
-- Store extracted text in PostgreSQL
-
-### AI-Based Letter Extraction
-
-The system uses a local LLM to convert unstructured letter text into structured information.
-
-The extraction process identifies:
-
-- Date
-- Reference number
-- Recipient
-- Subject
-- Salutation
-- Sender
-- Organization
-- Department
-- Request type
-- Purpose
-- Geographic area
-- Time period
-- Data requirements
-- Project / activity
-- Requested action
-
-The extraction process is instructed to use only information explicitly present in the letter and avoid inventing missing details.
-
-### Format Validation
-
-Validates whether the letter contains the required structural elements.
-
-The validation checks include:
-
-- Date
-- Recipient
-- Subject
-- Salutation
-- Body
-- Closing
-- Sender
-
-Optional information is not incorrectly treated as mandatory.
-
-### Content Validation
-
-Validates the actual request against the project's knowledge base.
-
-Applicable requirements include:
-
-- Request type
-- Purpose
-- Geographic area
-- Time period
-- Data specification
-- Project / activity
-- Requested action
-- Applicable supporting information
-- Request consistency
-
-### Knowledge-Base-Driven Validation
-
-Validation rules are maintained separately from the Java business logic.
-
-The knowledge base acts as the source of truth for content validation, allowing validation rules to be updated independently.
-
-### Automated Response Generation
-
-The system generates a client-facing response based on the validation results.
-
-For invalid requests, the generated response explains:
-
-- Missing information
-- Identified issues
-- Required corrections
-
-For valid requests, the response confirms that the request satisfies the applicable requirements and can proceed.
-
----
-
-## System Workflow
+## 🏗️ System Architecture
 
 ```text
-                         Client Letter
-                              |
-                              v
-                    +-------------------+
-                    |  Document Upload  |
-                    +---------+---------+
-                              |
-                              v
-                    +-------------------+
-                    | OCR / PDF Text    |
-                    | Extraction        |
-                    +---------+---------+
-                              |
-                              v
-                  +-------------------------+
-                  | Letter Information       |
-                  | Extraction               |
-                  +-----------+-------------+
-                              |
-                    +---------+---------+
-                    |                   |
-                    v                   v
-          +----------------+   +-------------------+
-          | Format         |   | Content           |
-          | Validation     |   | Validation        |
-          +-------+--------+   +---------+---------+
-                                        |
-                                        v
-                              +-------------------+
-                              | Knowledge Base    |
-                              +---------+---------+
-                                        |
-                                        v
-                              +-------------------+
-                              | Validation        |
-                              | Results           |
-                              +---------+---------+
-                                        |
-                                        v
-                              +-------------------+
-                              | Response          |
-                              | Generation        |
-                              +---------+---------+
-                                        |
-                                        v
-                                  Client Response
-AI Architecture
+                    ┌──────────────────────┐
+                    │      Client/User     │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │    Spring Boot API   │
+                    └──────────┬───────────┘
+                               │
+              ┌────────────────┼────────────────┐
+              │                │                │
+              ▼                ▼                ▼
+       ┌────────────┐   ┌──────────────┐  ┌──────────────┐
+       │   Upload   │   │     OCR      │  │  Validation  │
+       │   Module   │   │    Module    │  │    Module    │
+       └────────────┘   └──────────────┘  └──────┬───────┘
+                                                   │
+                                                   ▼
+                                         ┌──────────────────┐
+                                         │      Ollama      │
+                                         │   Qwen 2.5:3B    │
+                                         └────────┬─────────┘
+                                                  │
+                         ┌────────────────────────┼────────────────────┐
+                         │                        │                    │
+                         ▼                        ▼                    ▼
+                  ┌──────────────┐      ┌──────────────────┐   ┌──────────────┐
+                  │   Letter     │      │ Knowledge Base   │   │   Response   │
+                  │  Extraction  │      │    Validation    │   │  Generation  │
+                  └──────────────┘      └──────────────────┘   └──────────────┘
+                                                  │
+                                                  ▼
+                                         ┌──────────────────┐
+                                         │    PostgreSQL    │
+                                         └──────────────────┘
+🧠 AI Architecture
 
-The application uses Spring AI's ChatClient to communicate with a locally running Ollama instance.
+The application uses Spring AI's ChatClient to communicate with a locally running LLM through Ollama.
 
-+-------------------------+
-|     Spring Boot App     |
-+------------+------------+
-             |
-             v
-+-------------------------+
-|    Spring AI ChatClient |
-+------------+------------+
-             |
-             v
-+-------------------------+
-|         Ollama          |
-|    localhost:11434      |
-+------------+------------+
-             |
-             v
-+-------------------------+
-|       Qwen 2.5 3B       |
-+-------------------------+
+Spring Boot Application
+          │
+          ▼
+    Spring AI ChatClient
+          │
+          ▼
+      Ollama API
+          │
+          ▼
+     Qwen 2.5:3B
+          │
+          ▼
+   Structured / Text Output
+Why Ollama? 🦙
 
-Using Ollama allows the application to perform LLM inference locally without relying on an external LLM API during development and testing.
+The application uses a local LLM instead of relying on an external hosted API.
 
-Core Modules
-Document Management
+Benefits include:
 
-Handles:
+🔒 Local AI processing
+💰 No per-request API cost
+🌐 No dependency on external AI APIs during runtime
+🧪 Easy experimentation with different local models
+🛠️ Suitable for development and experimentation
+🧩 Core Modules
+1. 📤 Document Upload Module
 
-Document upload
-File validation
-Metadata persistence
-Processing status management
-OCR Service
+Responsible for receiving client documents through the REST API.
 
-Handles:
+Supported formats include:
 
-PDF text extraction
-Image OCR
-Extracted text persistence
-Letter Extraction Service
+PDF
+PNG
+JPEG
 
-Converts unstructured letter text into structured LetterDetails.
+The module:
 
-Format Validation Service
+Validates the uploaded file
+Checks file size
+Stores document metadata
+Saves the document
+Creates a database record
+2. 👁️ OCR Module
 
-Determines whether the letter follows the required document structure.
+The OCR module extracts text from uploaded documents.
 
-Content Validation Service
+Technologies used:
 
-Checks extracted request information against applicable knowledge-base rules.
+Tesseract
+Tess4J
+Apache PDFBox
 
-Knowledge Base Service
+For supported documents, the extracted text is stored in PostgreSQL and becomes the input for the validation pipeline.
 
-Loads the project's validation knowledge base.
+3. 🧾 Letter Extraction Module
 
-Knowledge Base Retriever
+The extracted letter text is passed to the LLM to identify structured information.
 
-Provides knowledge-base content to the content validation process.
+The system extracts fields such as:
 
-Response Generation Service
+Date
+Reference Number
+Recipient
+Subject
+Salutation
+Sender
+Organization
+Department
+Body
+Request Type
+Purpose
+Geographic Area
+Time Period
+Data Requirements
+Project Activity
+Requested Action
 
-Converts validation results into a clear client-facing response.
+The model is explicitly instructed not to invent information that is not present in the letter.
 
-Letter Validation Service
+4. 📋 Format Validation Module
 
-Coordinates the complete validation workflow.
+This module checks whether the letter contains the expected structural elements.
 
-Knowledge Base
+The validator checks elements such as:
 
-The project contains a synthetic development knowledge base for validating geospatial and remote-sensing related requests.
+Date
+Recipient
+Subject
+Salutation
+Body
+Closing
+Sender
+
+The system focuses on the semantic presence of these sections, rather than requiring an exact physical document layout.
+
+Reference numbers are treated as optional.
+
+5. 📚 Knowledge Base–Driven Content Validation
+
+The content validator determines whether the actual request contains the information required to process it.
+
+The validation rules are maintained in a knowledge base rather than being hard-coded directly into Java business logic.
 
 The knowledge base contains rules related to areas such as:
 
@@ -300,22 +191,108 @@ Purpose
 Geographic area
 Time period
 Data requirements
-Output requirements
+Output format
 Project/activity information
-Supporting information
+Supporting documents
 Requested action
-Request consistency
+Consistency between different parts of the request
 
-The validation system is designed to apply only relevant rules and avoid treating optional information as mandatory.
+The system applies only the rules relevant to the particular request.
 
-Note: The included knowledge base contains synthetic development data and does not contain confidential MRSAC information.
+6. ✍️ Response Generation Module
 
-Project Structure
+After format and content validation, the system generates a client-facing response.
+
+For an invalid request, the response explains:
+
+❌ What information is missing
+⚠️ What issues were identified
+📝 What needs to be corrected
+
+For a valid request, the system confirms that the request contains the required information and can proceed.
+
+The generated response is intentionally kept concise and focused on the validation outcome.
+
+📚 Knowledge Base
+
+The current implementation uses a synthetic development knowledge base created specifically for this project.
+
+⚠️ The knowledge base does not contain confidential MRSAC information.
+
+The current implementation loads the knowledge base and provides it to the LLM during content validation.
+
+Example validation principles
+Required information should be explicitly present.
+
+Do not assume information that is not provided.
+
+Optional information should not be treated as mandatory.
+
+Time period is required when the requested data depends on a specific
+time period.
+
+The requested action should be clear.
+
+Contradictory information should be reported.
+
+Only applicable validation rules should be applied.
+
+This approach keeps the validation logic separate from the Java application code and allows the knowledge base to act as the source of validation rules.
+
+🔄 Complete System Workflow
+                📄 Client Letter
+                       │
+                       ▼
+               📤 Document Upload
+                       │
+                       ▼
+                💾 Store Document
+                       │
+                       ▼
+                    👁️ OCR
+                       │
+                       ▼
+              📝 Extracted Text
+                       │
+                       ▼
+             🧠 LLM Information
+                 Extraction
+                       │
+                       ▼
+              ┌─────────────────┐
+              │ Letter Details  │
+              └────────┬────────┘
+                       │
+            ┌──────────┴──────────┐
+            ▼                     ▼
+     📋 Format Validation   📚 Content Validation
+            │                     │
+            └──────────┬──────────┘
+                       ▼
+               ✍️ Response
+                Generation
+                       │
+                       ▼
+              📩 Final Response
+🛠️ Technology Stack
+Technology	Purpose
+☕ Java 21	Primary programming language
+🌱 Spring Boot	Backend framework
+🧠 Spring AI	LLM integration
+🦙 Ollama	Local LLM runtime
+🤖 Qwen 2.5:3B	Local language model
+🗄️ PostgreSQL	Database
+🧩 Spring Data JPA	Database interaction
+👁️ Tesseract / Tess4J	OCR
+📄 Apache PDFBox	PDF text processing
+📦 Maven	Dependency management
+🧪 Postman	API testing
+💻 IntelliJ IDEA	Development environment
+📁 Project Structure
 src/
 └── main/
     ├── java/
     │   └── com/mrsac/lettervalidation/
-    │       │
     │       ├── config/
     │       │
     │       ├── controller/
@@ -345,83 +322,82 @@ src/
     │       ├── repository/
     │       │   └── DocumentRepository
     │       │
-    │       └── service/
-    │           ├── DocumentService
-    │           ├── OcrService
-    │           ├── LetterExtractionService
-    │           ├── LetterValidationService
-    │           ├── KnowledgeBaseService
-    │           ├── KnowledgeBaseRetriever
-    │           ├── ContentValidationService
-    │           └── ResponseGenerationService
+    │       ├── service/
+    │       │   ├── DocumentService
+    │       │   ├── OcrService
+    │       │   ├── LetterExtractionService
+    │       │   ├── LetterValidationService
+    │       │   ├── KnowledgeBaseService
+    │       │   ├── KnowledgeBaseRetriever
+    │       │   ├── ContentValidationService
+    │       │   └── ResponseGenerationService
+    │       │
+    │       └── LetterValidationSystemApplication
     │
     └── resources/
         ├── knowledge-base/
         │   └── mrsac_dummy_knowledge_base.txt
         │
         └── application.properties
-API Modules
 
-The application exposes APIs for different stages of the document processing pipeline.
+ℹ️ OpenAiController is a legacy class name from the earlier OpenRouter/OpenAI-compatible integration. The current AI runtime is Ollama + Qwen 2.5:3B.
 
-Document APIs
-POST /documents/upload
+🔌 API Modules
 
-Handles document upload and document processing.
+The application exposes REST APIs for different stages of the processing pipeline.
 
-OCR APIs
-POST /ocr/{documentId}
+📄 Document APIs
 
-Processes an uploaded document and extracts its text.
+Responsible for:
 
-AI Test API
-GET /api/ai/test
+Uploading documents
+Managing document processing
+👁️ OCR APIs
 
-Used to verify communication between Spring AI and the local Ollama model.
+Responsible for:
 
-Letter Extraction APIs
+Triggering OCR
+Extracting text from documents
+🧠 Letter Extraction APIs
 
-Handles extraction of structured information from letter text.
+Responsible for:
 
-Validation APIs
+Extracting structured letter information
+Performing format validation
+✍️ Response APIs
 
-Handles:
+Responsible for:
 
-Format validation
-Content validation
-Complete letter validation
-Response Generation
+Running the validation pipeline
+Generating the final response
+🧪 Example Processing
+Input
+Subject: Request for Satellite Imagery for Wardha District
 
-Generates the final client-facing response based on validation results.
+We are undertaking a project related to satellite imagery and request
+MRSAC to provide the required satellite data for our work.
 
-Example Processing Flow
-1. Client uploads a letter
-              |
-              v
-2. Document metadata is stored
-              |
-              v
-3. OCR extracts the letter text
-              |
-              v
-4. LLM extracts structured information
-              |
-              v
-5. Format validation is performed
-              |
-              v
-6. Content is validated against the knowledge base
-              |
-              v
-7. Missing information and issues are identified
-              |
-              v
-8. Response generator creates client-facing response
-Database
+The requested satellite imagery is intended for our project activities.
+We kindly request you to provide the necessary data and support.
+Possible Validation
+CONTENT VALID: false
 
-The application uses PostgreSQL for persistent document storage.
+MISSING INFORMATION:
+- Specific time period for the satellite imagery
 
-The documents table stores information such as:
+ISSUES:
+- Purpose of the request is insufficiently specific
+- Data requirements are not sufficiently specified
+- Requested action is vague
+Generated Response
+
+The response-generation module converts the validation result into a client-facing explanation describing the corrections required before the request can be processed.
+
+🗄️ Database
+
+The application uses PostgreSQL for persistent document information.
+
+The documents table stores information including:
 
 Document ID
 Original file name
@@ -430,230 +406,291 @@ File path
 Extracted text
 Processing status
 Upload timestamp
+Document Status
+UPLOADED
+    ↓
+PROCESSING
+    ↓
+OCR_COMPLETED
+    ↓
+VALIDATED
+    ↓
+COMPLETED
 
-The extracted letter text is stored as PostgreSQL TEXT.
+If an error occurs during processing:
 
-Validation Principles
+PROCESSING
+    ↓
+FAILED
+🛡️ Validation Principles
 
-The AI validation pipeline follows several important principles:
+The validation system follows several important principles:
 
-Do not invent missing information
-Do not assume information that is not explicitly present
-Apply only relevant validation rules
-Do not mark optional information as missing
-Clearly identify missing required information
-Explain inconsistencies
-Use the knowledge base as the validation source
-Keep validation decisions separate from client-facing response generation
-Error Handling
+🚫 No Hallucination
 
-The application includes centralized exception handling for consistent API responses.
+The LLM is instructed not to invent information that does not exist in the letter.
 
-The exception layer provides:
+🔎 Explicit Information Only
 
-Structured error responses
-Invalid document handling
-Validation error handling
-Centralized exception processing
-Configuration
+Information must be explicitly available in the extracted letter content.
 
-The application requires:
+📚 Knowledge Base as Source of Rules
 
-Java 21
-PostgreSQL
-Ollama
-Qwen 2.5 3B
-Tesseract OCR
+Validation requirements come from the knowledge base rather than being manually hard-coded into the validation service.
 
-Example Ollama configuration:
+🎯 Applicable Rules Only
+
+Optional or irrelevant requirements should not cause a request to fail.
+
+⚠️ Clear Error Reporting
+
+Missing information and inconsistencies are reported explicitly so the requester knows what needs to be corrected.
+
+⚙️ Configuration
+
+The application currently uses Ollama locally.
+
+Example configuration:
 
 spring.ai.model.chat=ollama
 
 spring.ai.ollama.base-url=http://localhost:11434
 spring.ai.ollama.chat.model=qwen2.5:3b
 
-Database credentials should be provided through local configuration or environment-specific configuration.
+The Ollama model can be changed depending on the available hardware and desired performance.
 
-Sensitive credentials should not be committed to the repository.
-
-Getting Started
-Prerequisites
-
-Install the following:
-
-Java 21
-Maven
-PostgreSQL
-Ollama
-Tesseract OCR
-Clone the Repository
+🚀 Getting Started
+1️⃣ Clone the repository
 git clone <repository-url>
-cd letter-validation-system
-Start Ollama
+2️⃣ Open the project
 
-Make sure Ollama is running and the required model is available:
+Open the project using IntelliJ IDEA or another Java IDE.
 
-ollama run qwen2.5:3b
+3️⃣ Verify Java
 
-The application communicates with Ollama through:
+Make sure Java 21 is installed.
 
-http://localhost:11434
-Configure PostgreSQL
+java -version
+4️⃣ Verify Ollama
 
-Create the required PostgreSQL database and configure the database credentials in:
+Install and start Ollama, then verify the model is available.
 
-src/main/resources/application.properties
-Build the Project
-mvn clean install
+ollama list
 
-Or using the Maven wrapper:
+The required model:
 
-./mvnw clean install
-Run the Application
-mvn spring-boot:run
-Testing
+qwen2.5:3b
+5️⃣ Configure PostgreSQL
 
-The APIs can be tested using Postman or another API client.
+Create the required PostgreSQL database and configure the database connection in application.properties.
 
-The system was tested using synthetic letters representing different validation scenarios, including:
+6️⃣ Start the application
 
-Properly formatted and complete requests
-Missing mandatory information
-Incomplete data specifications
-Vague requested actions
-Missing time periods
-Incomplete project descriptions
+Using Maven:
 
-The complete pipeline was tested with the local Ollama-based LLM implementation.
+./mvnw spring-boot:run
 
-Project Status
-Completed
-Document upload
-PostgreSQL persistence
-OCR integration
-PDF text extraction
-LLM-based letter extraction
-Format validation
-Knowledge-base-driven content validation
-Automated response generation
-Local Ollama integration
-End-to-end validation workflow
+On Windows:
 
-The complete letter validation and automated response generation workflow is functional as the stable internship implementation.
+mvnw.cmd spring-boot:run
+7️⃣ Test the APIs
 
-Future Improvements
+Use Postman or another REST client to test the application endpoints.
 
-The stable internship implementation intentionally focuses on the core validation workflow.
+🧪 Testing
 
-Future development can explore:
+The project was tested across multiple stages of the pipeline, including:
 
-Redis-based caching
-Apache Kafka-based asynchronous processing
-Event-driven document processing
-Vector database integration
-Retrieval-Augmented Generation (RAG)
-Improved semantic knowledge-base retrieval
-Asynchronous processing
-Authentication and authorization
-Monitoring and observability
-Scalable production deployment
+📤 Document upload
+👁️ OCR extraction
+💾 Database persistence
+🧾 Letter information extraction
+📋 Format validation
+📚 Content validation
+✍️ Automated response generation
+🦙 Local Ollama inference
 
-These advanced experiments can be developed separately without modifying the stable internship implementation.
+Different letter formats and content scenarios were used to verify that the validation pipeline could distinguish between complete and incomplete requests.
 
-Architecture Evolution
-Current System
-                    Spring Boot
-                         |
-        +----------------+----------------+
-        |                |                |
-        v                v                v
-   PostgreSQL          OCR          Ollama / LLM
-        |                                 |
-        +---------------+-----------------+
-                        |
-                        v
-                Validation Pipeline
-Future LetterFlow Architecture
-                         Spring Boot
-                              |
-          +-------------------+-------------------+
-          |                   |                   |
-          v                   v                   v
-       Redis               Kafka             PostgreSQL
-          |                   |                   |
-          |                   v                   |
-          |            Event Processing           |
-          |                   |                   |
-          +-------------------+-------------------+
-                              |
-                              v
-                       Vector Database
-                              |
-                              v
-                         Ollama / LLM
+🏆 Project Status
+✅ Completed
+ Document upload
+ PostgreSQL persistence
+ OCR integration
+ PDF processing
+ Letter information extraction
+ Format validation
+ Knowledge Base–Driven Content Validation
+ Automated response generation
+ Ollama integration
+ Qwen 2.5:3B integration
+ End-to-end validation pipeline
+ API testing
+ Error handling
+🎉 Current State
 
-The advanced architecture will be explored separately so that the stable internship implementation remains unchanged.
+The internship version of the project is complete and stable.
 
-Key Learning Outcomes
+The current implementation is intentionally being kept as the final internship version.
 
-This project provided practical experience in:
+🔮 Future Improvements
 
-Spring Boot backend development
-REST API design
-Spring Data JPA
-PostgreSQL
-OCR integration
-PDF processing
-LLM integration
-Spring AI
-Local LLM deployment using Ollama
-Prompt engineering
-Structured information extraction
-AI-assisted validation
-Knowledge-base-driven validation
-Exception handling
-Backend architecture
-AI-assisted document processing
-Important Notes
-PostgreSQL must be running before starting the application.
-Ollama must be installed and running locally.
-The qwen2.5:3b model must be available in Ollama.
-Tesseract OCR must be correctly configured.
-The included knowledge base uses synthetic development data.
-No confidential MRSAC data is included in this repository.
-Sensitive credentials should be stored using environment variables or local configuration.
-Redis, Kafka, and vector database integration are not part of the current stable internship implementation.
-Disclaimer
+The current internship implementation provides a foundation for a more advanced architecture.
 
-This project was developed as a research internship project for educational and research purposes.
+Possible future improvements include:
 
-The knowledge base included in this repository contains synthetic development data and should not be considered an official representation of MRSAC policies, procedures, requirements, or confidential information.
+🧠 Real RAG
 
-Authors
-Tejas
+Replace the current whole-knowledge-base prompt approach with a proper retrieval pipeline.
 
-Computer Science Engineering Student
+Potential components:
 
-Interested in backend engineering, AI-assisted systems, distributed systems, and real-world software architecture.
+Vector database
+Embeddings
+Semantic search
+Chunking
+Metadata filtering
+Context-aware retrieval
+⚡ Redis
 
-Vansh Nagpure
+Redis can be introduced for:
 
-Project Contributor
+Caching
+Temporary processing state
+Frequently accessed data
+Performance optimization
+📨 Apache Kafka
 
-Final Thoughts
+Kafka can be used to introduce asynchronous event-driven processing.
 
-This project demonstrates how traditional backend engineering can be combined with OCR, LLMs, and knowledge-base-driven validation to automate document processing workflows.
+For example:
 
-It bridges:
+Document Uploaded
+       ↓
+Kafka Event
+       ↓
+OCR Service
+       ↓
+Validation Service
+       ↓
+Response Generation
 
-Backend Engineering
-        +
-Artificial Intelligence
-        +
-OCR / Document Processing
-        +
-Database Systems
-        +
-Knowledge-Based Validation
+This would allow different stages of the pipeline to operate asynchronously.
 
-The project provides a foundation for evolving a synchronous backend into a more scalable, event-driven, and AI-powered system.
+🔄 Asynchronous Processing
+
+Long-running OCR and AI operations could be processed asynchronously rather than keeping a request waiting for the entire pipeline.
+
+📊 Monitoring & Observability
+
+Future versions could introduce:
+
+Structured logging
+Metrics
+Distributed tracing
+Health monitoring
+Processing-time measurement
+🧪 Architecture Evolution
+
+The current internship project focuses on getting the complete validation workflow working reliably.
+
+A future experimental version, LetterFlow, can be used to explore more advanced backend engineering concepts without changing the completed internship implementation.
+
+                 CURRENT INTERNSHIP VERSION
+                            │
+                            ▼
+                 ┌─────────────────────┐
+                 │    Spring Boot      │
+                 │      + Ollama       │
+                 │      + PostgreSQL   │
+                 └─────────────────────┘
+                            │
+                            ▼
+                 Knowledge Base
+                 Driven Validation
+
+
+                            │
+                            │ Future Evolution
+                            ▼
+
+
+                     LETTERFLOW 🚀
+                            │
+             ┌──────────────┼──────────────┐
+             ▼              ▼              ▼
+          Redis          Kafka         Vector DB
+             │              │              │
+             └──────────────┼──────────────┘
+                            ▼
+                       Advanced RAG
+                            │
+                            ▼
+                 Async Event-Driven
+                      Architecture
+💡 Key Learning Outcomes
+
+This project provided practical experience with:
+
+☕ Advanced Java backend development
+🌱 Spring Boot architecture
+🗄️ PostgreSQL and JPA
+📄 Document processing
+👁️ OCR integration
+🤖 LLM integration
+🧠 Spring AI
+🦙 Local LLM deployment with Ollama
+📚 Knowledge Base–Driven validation
+🔌 REST API development
+🧩 DTO-based architecture
+⚠️ Exception handling
+🧪 API testing
+🏗️ Designing multi-stage backend workflows
+🔐 Important Notes
+The knowledge base used in this project is synthetic development data.
+No confidential MRSAC information is included in the repository.
+The current implementation does not use a vector database.
+The current implementation does not implement production-grade RAG.
+Advanced RAG, Redis, Kafka, and event-driven processing are planned as future experimentation rather than part of the frozen internship implementation.
+The local LLM is used through Ollama.
+📜 Disclaimer
+
+This project was developed as an internship/research project for demonstrating automated document validation and AI-assisted response generation.
+
+The current knowledge base contains synthetic information for development and testing purposes and should not be considered an official representation of organizational policies or procedures.
+
+👨‍💻 Authors
+Name	Role
+Tejas	Developer
+Vansh Nagpure	Developer
+❤️ Final Thoughts
+
+This project combines traditional backend engineering with modern AI capabilities to create an automated document-processing workflow.
+
+From:
+
+📄 Raw Document
+
+to:
+
+👁️ OCR
+
+to:
+
+🧠 AI Extraction
+
+to:
+
+📋 Validation
+
+to:
+
+📚 Knowledge Base Reasoning
+
+to:
+
+✍️ Automated Response
+
+the system demonstrates how an AI-assisted backend can be integrated into a practical document-processing pipeline.
+
+🚀 Built with Java, Spring Boot, Spring AI, PostgreSQL, Tesseract, Ollama & Qwen 2.5.
