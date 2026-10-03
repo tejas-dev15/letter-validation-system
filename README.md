@@ -663,7 +663,8 @@ The current knowledge base contains synthetic information for development and te
 Name	Role
 Tejas	Developer
 Vansh Nagpure	Developer
-❤️ Final Thoughts
+
+Final Thoughts
 
 This project combines traditional backend engineering with modern AI capabilities to create an automated document-processing workflow.
 
