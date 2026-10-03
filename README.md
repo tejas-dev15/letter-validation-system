@@ -660,9 +660,9 @@ This project was developed as an internship/research project for demonstrating a
 The current knowledge base contains synthetic information for development and testing purposes and should not be considered an official representation of organizational policies or procedures.
 
 👨‍💻 Authors
-Name	Role
-Tejas	Developer
-Vansh Nagpure	Developer
+
+Tejas	Dange
+Vansh Nagpure	
 
 Final Thoughts
 
